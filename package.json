@@ -1,0 +1,46 @@
+{
+  "name": "top-it-hub",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@ant-design/charts": "^2.2.6",
+    "@ant-design/plots": "^2.3.3",
+    "@types/formidable": "^3.4.5",
+    "@types/mongoose": "^5.11.97",
+    "aws-sdk": "^2.1691.0",
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
+    "formidable": "^3.5.2",
+    "jose": "^5.9.6",
+    "jsonwebtoken": "^9.0.2",
+    "jwt-decode": "^4.0.0",
+    "mongoose": "^8.8.0",
+    "next": "^15.0.3",
+    "nodemailer": "^6.9.16",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-icons": "^5.4.0",
+    "react-range": "^1.10.0",
+    "react-select": "^5.8.3",
+    "stackblur-canvas": "^2.7.0",
+    "uuid": "^11.0.2"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/node": "^20",
+    "@types/nodemailer": "^6.4.16",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}
