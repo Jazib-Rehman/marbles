@@ -7,7 +7,9 @@ export interface IInventory {
   quantity: number;
   saleRate: number;
   purchaseRate: number;
-  supplier: string;
+  supplier?: string;
+  status: "In Stock" | "Low Stock" | "Out of Stock";
+  location?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
