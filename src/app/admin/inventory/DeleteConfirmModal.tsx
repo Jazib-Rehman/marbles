@@ -21,7 +21,7 @@ export default function DeleteConfirmModal({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl p-6 w-full max-w-md">
+      <div className="bg-white rounded-xl p-6 w-full max-w-md sm:max-w-2xl">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-bold text-red-600 flex items-center gap-2">
             <MdWarning size={24} />

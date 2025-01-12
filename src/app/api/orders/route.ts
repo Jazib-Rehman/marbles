@@ -10,34 +10,35 @@ export async function GET(request: NextRequest) {
     await dbConnect();
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
+    const customerId = searchParams.get("customerId");
 
+    // Single order fetch
     if (id) {
       const order = await Order.findById(id)
         .populate('customer', 'businessName firstName lastName phone email address')
         .populate('items.inventory', 'marbleType size quantity');
 
       if (!order) {
-        return NextResponse.json(
-          { error: "Order not found" },
-          { status: 404 }
-        );
+        return NextResponse.json({ error: "Order not found" }, { status: 404 });
       }
       return NextResponse.json(order);
     }
 
-    // List orders (existing code)
-    const search = searchParams.get("search");
-    const status = searchParams.get("status");
-    const customerType = searchParams.get("customerType");
-
+    // List orders with filters
     let query: any = {};
-    if (status) query.status = status;
-    if (customerType) query.customerType = customerType;
-    if (search) {
+    
+    if (customerId) {
+      query.customer = customerId;
+    }
+    
+    if (searchParams.get("status")) {
+      query.status = searchParams.get("status");
+    }
+
+    if (searchParams.get("search")) {
       query.$or = [
-        { orderNumber: { $regex: search, $options: "i" } },
-        { customerName: { $regex: search, $options: "i" } },
-        { customerContact: { $regex: search, $options: "i" } },
+        { orderNumber: { $regex: searchParams.get("search"), $options: "i" } },
+        { customerName: { $regex: searchParams.get("search"), $options: "i" } },
       ];
     }
 
@@ -69,52 +70,29 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
 
-    // Handle order cancellation
-    if (body.status === "Cancelled" && existingOrder.status !== "Cancelled") {
-      // Return items to inventory
-      for (const item of existingOrder.items) {
-        await Inventory.findByIdAndUpdate(item.inventory, {
-          $inc: { quantity: item.quantity }
-        });
-      }
-
-      // Update customer stats
-      await CustomerModel.findByIdAndUpdate(existingOrder.customer, {
-        $inc: {
-          totalOrders: -1,
-          totalSpent: -existingOrder.totalAmount
-        }
-      });
-    }
-
-    // Handle payments
+    // Handle new payments
     if (body.payments) {
-      const newPayments = Array.isArray(body.payments) ? body.payments : [body.payments];
-
-      // Calculate new paid amount
-      const totalPaid = [...existingOrder.payments, ...newPayments]
-        .reduce((sum, payment) => sum + payment.amount, 0);
-
-      // Update payment related fields
-      body.paidAmount = totalPaid;
-      body.remainingAmount = existingOrder.totalAmount - totalPaid;
-      body.paymentStatus = totalPaid === 0 ? "Unpaid"
-        : totalPaid < existingOrder.totalAmount ? "Partially Paid"
-          : "Paid";
-
-      existingOrder.payments.push(...newPayments);
+      // Add new payments to the existing payments array
+      existingOrder.payments.push(...body.payments);
+      
+      // Save to trigger the pre-save middleware
       await existingOrder.save();
+      
+      // Remove payments from body to prevent duplicate updates
+      delete body.payments;
     }
 
-    // Update the order
-    const updatedOrder = await Order.findByIdAndUpdate(
-      id,
-      {
-        ...body,
-        updatedAt: new Date()
-      },
-      { new: true, runValidators: true }
-    )
+    // Update other fields if any
+    if (Object.keys(body).length > 0) {
+      await Order.findByIdAndUpdate(
+        id,
+        body,
+        { new: true, runValidators: true }
+      );
+    }
+
+    // Fetch updated order with populated fields
+    const updatedOrder = await Order.findById(id)
       .populate('customer', 'businessName firstName lastName phone email address')
       .populate('items.inventory', 'marbleType size quantity');
 

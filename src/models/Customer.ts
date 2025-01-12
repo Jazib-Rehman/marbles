@@ -130,8 +130,6 @@ export interface ICustomerBase {
   status: "Active" | "Inactive";
   totalOrders: number;
   totalSpent: number;
-  createdAt?: Date;
-  updatedAt?: Date;
 }
 
 export interface IB2BCustomer extends ICustomerBase {

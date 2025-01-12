@@ -23,20 +23,26 @@ export default function AddPaymentModal({
   const [payment, setPayment] = useState({
     amount: 0,
     paymentMethod: "Cash" as IPayment["paymentMethod"],
-    paymentDate: new Date().toISOString().split('T')[0],
-    reference: "",
+    date: new Date().toISOString().split('T')[0],
     notes: "",
+    reference: "",
   });
 
   const handlePaymentAdd = async () => {
     try {
       setIsSubmitting(true);
       setError(null);
-      await orderApi.addPayment(order._id!, {
-        ...payment,
-        paymentDate: new Date(payment.paymentDate),
-      });
-      onSuccess();
+      if (order._id) {
+        const response = await orderApi.addPayment(order._id, {
+          ...payment,
+          amount: Number(payment.amount)
+        });
+
+        if (response) {
+          onSuccess();
+          onClose();
+        }
+      }
     } catch (err) {
       setError(getErrorMessage(err));
     } finally {
@@ -102,9 +108,9 @@ export default function AddPaymentModal({
             <input
               type="date"
               className="w-full px-3 py-2 border rounded-lg"
-              value={payment.paymentDate}
+              value={payment.date}
               onChange={(e) =>
-                setPayment({ ...payment, paymentDate: e.target.value })
+                setPayment({ ...payment, date: e.target.value })
               }
             />
           </div>

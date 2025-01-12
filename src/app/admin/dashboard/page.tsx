@@ -3,9 +3,8 @@ import { useEffect, useState } from 'react';
 import { dashboardApi } from '@/services/api/dashboard';
 import { MdPendingActions, MdDone, MdWarning, MdPeople } from 'react-icons/md';
 import { FaMoneyBillWave, FaBoxes } from 'react-icons/fa';
-import { Line, Pie } from '@ant-design/plots';
 
-export default function AdminDashboard() {
+export default function DashboardPage() {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -14,11 +13,7 @@ export default function AdminDashboard() {
     const fetchData = async () => {
       try {
         const response = await dashboardApi.getStats();
-        if (response && response.revenueData && response.ordersByStatus) {
-          setData(response);
-        } else {
-          setError('Invalid data structure');
-        }
+        setData(response);
       } catch (err) {
         setError('Error fetching dashboard data');
       } finally {
@@ -33,57 +28,7 @@ export default function AdminDashboard() {
   if (error) return <div>Error: {error}</div>;
   if (!data) return null;
 
-  const { stats, recentOrders, topCustomers, revenueData, ordersByStatus } = data;
-
-  // Configure revenue trend chart
-  const revenueConfig = {
-    data: data?.revenueData || [],
-    xField: 'month',
-    yField: 'revenue',
-    point: {
-      size: 5,
-      shape: 'diamond',
-    },
-    color: '#FF914D',
-    yAxis: {
-      label: {
-        formatter: (value: number) => `₨${(value / 1000).toFixed(0)}K`,
-      },
-    },
-    tooltip: {
-      formatter: (datum: any) => {
-        return { name: 'Revenue', value: `₨${datum.revenue.toLocaleString()}` };
-      },
-    },
-  };
-
-  // Configure order status distribution chart
-  const orderStatusConfig = {
-    data: data?.ordersByStatus || [],
-    angleField: 'count',
-    colorField: '_id',
-    radius: 0.8,
-    label: {
-      type: 'spider',
-      content: '{name}\n{percentage}',
-      style: {
-        textAlign: 'center',
-      },
-    },
-    legend: {
-      position: 'bottom',
-    },
-    color: ['#FF914D', '#36B37E', '#FFB020', '#FF5630'],
-    tooltip: {
-      formatter: (datum: any) => {
-        return { name: datum._id, value: datum.count };
-      },
-    },
-    interactions: [
-      { type: 'element-active' },
-      { type: 'legend-highlight' },
-    ],
-  };
+  const { stats, recentOrders, topCustomers } = data;
 
   return (
     <div className="p-6">
@@ -141,29 +86,12 @@ export default function AdminDashboard() {
         />
       </div>
 
-      {/* Graphs Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <div className="bg-white rounded-xl shadow p-6">
-          <h2 className="text-xl font-bold mb-4">Revenue Trends</h2>
-          <div className="h-[300px]">
-            <Line {...revenueConfig} />
-          </div>
-        </div>
-        <div className="bg-white rounded-xl shadow p-6">
-          <h2 className="text-xl font-bold mb-4">Order Status Distribution</h2>
-          <div className="h-[300px]">
-            <Pie {...orderStatusConfig} />
-          </div>
-        </div>
-      </div>
-
-      {/* Recent Orders and Top Customers Grid */}
+      {/* Recent Orders */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent Orders */}
         <div className="bg-white rounded-xl shadow p-6">
           <h2 className="text-xl font-bold mb-4">Recent Orders</h2>
           <div className="space-y-4">
-            {recentOrders.map((order: any,i:number) => (
+            {recentOrders.map((order: any, i:number) => (
               <div key={i} className="flex justify-between items-center">
                 <div>
                   <div className="font-medium">{order.orderNumber}</div>
@@ -236,4 +164,4 @@ function StatCard({ title, value, icon, color }: StatCardProps) {
       </div>
     </div>
   );
-}
+} 

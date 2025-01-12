@@ -80,7 +80,7 @@ export default function AddInventoryModal({ isOpen, onClose, onSuccess }: AddInv
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl p-6 w-full max-w-2xl">
+      <div className="bg-white rounded-xl p-6 w-full max-w-md sm:max-w-2xl">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-bold">Add Inventory Item</h2>
           <button 
@@ -98,8 +98,8 @@ export default function AddInventoryModal({ isOpen, onClose, onSuccess }: AddInv
           </div>
         )}
 
-        <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-2 gap-4 mb-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Marble Type

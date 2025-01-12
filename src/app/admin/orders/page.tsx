@@ -112,8 +112,11 @@ export default function OrdersPage() {
                   </td>
                 </tr>
               ) : (
-                orders.map((order) => (
-                  <tr key={order._id} className="border-t border-gray-100">
+                orders.map((order, i) => (
+                  <tr 
+                    key={i}
+                    className="border-b border-gray-100 last:border-none hover:bg-gray-50"
+                  >
                     <td className="p-3">
                       <div className="font-medium">{order.orderNumber}</div>
                       <div className="text-sm text-gray-500">
@@ -126,8 +129,8 @@ export default function OrdersPage() {
                     </td>
                     <td className="p-3">
                       <div className="text-sm">
-                        {order.items.map((item) => (
-                          <div key={item.inventory}>
+                        {order.items.map((item,i) => (
+                          <div key={i}>
                             {item.marbleType} - {item.size} ({item.quantity})
                           </div>
                         ))}

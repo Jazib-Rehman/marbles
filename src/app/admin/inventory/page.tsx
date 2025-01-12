@@ -45,13 +45,13 @@ export default function InventoryPage() {
     const getStatusColor = (status: string) => {
         switch (status) {
             case "In Stock":
-                return "text-green-500 bg-green-50";
+                return { color: "text-green-500 bg-green-50", text: "In Stock" };
             case "Low Stock":
-                return "text-yellow-500 bg-yellow-50";
+                return { color: "text-yellow-500 bg-yellow-50", text: "Low Stock" };
             case "Out of Stock":
-                return "text-red-500 bg-red-50";
+                return { color: "text-red-500 bg-red-50", text: "Out of Stock" };
             default:
-                return "text-gray-500 bg-gray-50";
+                return { color: "text-gray-500 bg-gray-50", text: "Unknown" };
         }
     };
 
@@ -131,16 +131,16 @@ export default function InventoryPage() {
                 </div>
 
                 <div className="overflow-x-auto">
-                    <div className="p-4 min-w-[800px] lg:min-w-full">
+                    <div className="p-4 min-w-full lg:min-w-full">
                         <table className="w-full">
                             <thead className="bg-gray-50">
                                 <tr>
                                     <th className="text-left p-3">Item Details</th>
-                                    <th className="text-left p-3">Size</th>
+                                    <th className="text-right p-3 hidden sm:table-cell">Size</th>
                                     <th className="text-right p-3">Quantity</th>
-                                    <th className="text-right p-3">Purchase Rate</th>
-                                    <th className="text-right p-3">Sale Rate</th>
-                                    <th className="text-center p-3">Status</th>
+                                    <th className="text-right p-3 hidden sm:table-cell">Purchase Rate</th>
+                                    <th className="text-right p-3 hidden sm:table-cell">Sale Rate</th>
+                                    <th className="text-center p-3 hidden sm:table-cell">Status</th>
                                     <th className="text-right p-3">Actions</th>
                                 </tr>
                             </thead>
@@ -161,27 +161,22 @@ export default function InventoryPage() {
                                         </td>
                                     </tr>
                                 ) : (
-                                    inventoryItems.map((item) => (
-                                        <tr key={item._id} className="border-t border-gray-100">
+                                    inventoryItems.map((item, i) => (
+                                        <tr key={i} className="border-t border-gray-100">
                                             <td className="p-3">
                                                 <div className="font-medium">{item.marbleType}</div>
                                                 <div className="text-sm text-gray-500">{item.location}</div>
                                             </td>
-                                            <td className="p-3">{item.size}</td>
+                                            <td className="p-3 hidden sm:table-cell">{item.size}</td>
                                             <td className="p-3 text-right">{item.quantity}</td>
-                                            <td className="p-3 text-right">₨{item.purchaseRate.toLocaleString()}</td>
-                                            <td className="p-3 text-right">₨{item.saleRate.toLocaleString()}</td>
-                                            <td className="p-3">
+                                            <td className="p-3 text-right hidden sm:table-cell">₨{item.purchaseRate.toLocaleString()}</td>
+                                            <td className="p-3 text-right hidden sm:table-cell">₨{item.saleRate.toLocaleString()}</td>
+                                            <td className="p-3 hidden sm:table-cell">
                                                 <div className="flex justify-center">
                                                     <span
-                                                        className={`px-2 py-1 rounded-full text-sm ${item.status === "In Stock"
-                                                                ? "bg-green-50 text-green-600"
-                                                                : item.status === "Low Stock"
-                                                                    ? "bg-yellow-50 text-yellow-600"
-                                                                    : "bg-red-50 text-red-600"
-                                                            }`}
+                                                        className={`px-2 py-1 rounded-full text-sm ${getStatusColor(item.status).color}`}
                                                     >
-                                                        {item.status}
+                                                        {getStatusColor(item.status).text}
                                                     </span>
                                                 </div>
                                             </td>

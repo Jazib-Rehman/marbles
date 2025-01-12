@@ -51,9 +51,18 @@ export async function PUT(request: NextRequest) {
     }
 
     const body = await request.json();
+    
+    // Calculate status based on quantity
+    const status = body.quantity <= 0 ? "Out of Stock"
+      : body.quantity <= 100 ? "Low Stock"
+      : "In Stock";
+
     const updatedItem = await Inventory.findByIdAndUpdate(
       id,
-      { ...body },
+      { 
+        ...body,
+        status
+      },
       { new: true, runValidators: true }
     );
 
@@ -125,7 +134,7 @@ export async function POST(request: NextRequest) {
     // Set status based on quantity
     const status = body.quantity <= 0 ? "Out of Stock"
       : body.quantity <= 100 ? "Low Stock"
-        : "In Stock";
+      : "In Stock";
 
     const newItem = await Inventory.create({
       ...body,

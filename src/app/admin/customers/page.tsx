@@ -7,6 +7,7 @@ import { IB2BCustomer, IB2CCustomer } from "@/models/Customer";
 import { getErrorMessage } from "@/utils/apiUtils";
 import EditCustomerModal from "./EditCustomerModal";
 import DeleteCustomerModal from "./DeleteCustomerModal";
+import CustomerDetailsModal from "./CustomerDetailsModal";
 
 type CustomerType = "B2B" | "B2C";
 
@@ -18,8 +19,8 @@ export default function CustomersPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
-  const [selectedCustomer, setSelectedCustomer] = useState<IB2BCustomer | IB2CCustomer | null>(null);
-  const [deleteCustomer, setDeleteCustomer] = useState<IB2BCustomer | IB2CCustomer | null>(null);
+  const [editCustomer, setEditCustomer] = useState<IB2BCustomer | IB2CCustomer | null>(null);
+  const [viewCustomer, setViewCustomer] = useState<IB2BCustomer | IB2CCustomer | null>(null);
 
   const fetchCustomers = async (search?: string) => {
     try {
@@ -43,22 +44,18 @@ export default function CustomersPage() {
   };
 
   const handleDelete = async () => {
-    if (!deleteCustomer?._id) return;
+    if (!editCustomer?._id) return;
 
     try {
-      setIsDeleting(deleteCustomer._id);
-      await customerApi.delete(deleteCustomer._id);
+      setIsDeleting(editCustomer._id);
+      await customerApi.delete(editCustomer._id);
       fetchCustomers(searchQuery);
     } catch (err) {
       setError(getErrorMessage(err));
     } finally {
       setIsDeleting(null);
-      setDeleteCustomer(null);
+      setEditCustomer(null);
     }
-  };
-
-  const handleEdit = (customer: IB2BCustomer | IB2CCustomer) => {
-    setSelectedCustomer(customer);
   };
 
   return (
@@ -141,20 +138,20 @@ export default function CustomersPage() {
                 {activeTab === "B2B" ? (
                   <>
                     <th className="text-left p-3">Business Name</th>
-                    <th className="text-left p-3">Contact Person</th>
-                    <th className="text-left p-3">Business Type</th>
+                    <th className="text-left p-3 hidden md:table-cell">Contact Person</th>
+                    <th className="text-left p-3 hidden md:table-cell">Business Type</th>
                   </>
                 ) : (
                   <>
                     <th className="text-left p-3">Customer Name</th>
-                    <th className="text-left p-3">Phone</th>
-                    <th className="text-left p-3">Address</th>
+                    <th className="text-left p-3 hidden md:table-cell">Phone</th>
+                    <th className="text-left p-3 hidden md:table-cell">Address</th>
                   </>
                 )}
                 <th className="text-left p-3">Contact</th>
-                <th className="text-left p-3">Total Orders</th>
-                <th className="text-left p-3">Total Spent</th>
-                <th className="text-left p-3">Status</th>
+                <th className="text-left p-3 hidden md:table-cell">Total Orders</th>
+                <th className="text-left p-3 hidden md:table-cell">Total Spent</th>
+                <th className="text-left p-3 hidden md:table-cell">Status</th>
                 <th className="text-left p-3">Actions</th>
               </tr>
             </thead>
@@ -172,43 +169,49 @@ export default function CustomersPage() {
                   </td>
                 </tr>
               ) : (
-                customers.map((customer) => (
-                  <tr key={customer._id} className="border-t border-gray-100">
+                customers.map((customer,i) => (
+                  <tr key={i} className="border-t border-gray-100">
                     {activeTab === "B2B" ? (
                       // B2B Customer Row
                       <>
                         <td className="p-3">
-                          <div className="font-medium">
+                          <div 
+                            className="font-medium cursor-pointer hover:text-[#FF914D]"
+                            onClick={() => setViewCustomer(customer)}
+                          >
                             {(customer as IB2BCustomer).businessName}
                           </div>
                           <div className="text-sm text-gray-500">{customer.city}</div>
                         </td>
-                        <td className="p-3">{(customer as IB2BCustomer).contactPerson}</td>
-                        <td className="p-3">{(customer as IB2BCustomer).businessType}</td>
+                        <td className="p-3 hidden md:table-cell">{(customer as IB2BCustomer).contactPerson}</td>
+                        <td className="p-3 hidden md:table-cell">{(customer as IB2BCustomer).businessType}</td>
                       </>
                     ) : (
                       // B2C Customer Row
                       <>
                         <td className="p-3">
-                          <div className="font-medium">
+                          <div 
+                            className="font-medium cursor-pointer hover:text-[#FF914D]"
+                            onClick={() => setViewCustomer(customer)}
+                          >
                             {`${(customer as IB2CCustomer).firstName} ${
                               (customer as IB2CCustomer).lastName
                             }`}
                           </div>
                         </td>
-                        <td className="p-3">{customer.phone}</td>
-                        <td className="p-3">{customer.address}</td>
+                        <td className="p-3 hidden md:table-cell">{customer.phone}</td>
+                        <td className="p-3 hidden md:table-cell">{customer.address}</td>
                       </>
                     )}
                     <td className="p-3">
                       <div>{customer.phone}</div>
                       {customer.email && (
-                        <div className="text-sm text-gray-500">{customer.email}</div>
+                        <div className="text-sm text-gray-500 truncate w-24">{customer.email}</div>
                       )}
                     </td>
-                    <td className="p-3">{customer.totalOrders}</td>
-                    <td className="p-3">₨{customer.totalSpent.toLocaleString()}</td>
-                    <td className="p-3">
+                    <td className="p-3 hidden md:table-cell">{customer.totalOrders}</td>
+                    <td className="p-3 hidden md:table-cell">₨{customer.totalSpent.toLocaleString()}</td>
+                    <td className="p-3 hidden md:table-cell">
                       <span
                         className={`px-2 py-1 rounded-full text-sm ${
                           customer.status === "Active"
@@ -224,14 +227,14 @@ export default function CustomersPage() {
                         <button
                           className="p-1 text-blue-500 hover:bg-blue-50 rounded"
                           title="Edit"
-                          onClick={() => handleEdit(customer)}
+                          onClick={() => setEditCustomer(customer)}
                         >
                           <MdEdit size={20} />
                         </button>
                         <button
                           className="p-1 text-red-500 hover:bg-red-50 rounded"
                           title="Delete"
-                          onClick={() => setDeleteCustomer(customer)}
+                          onClick={() => setEditCustomer(customer)}
                         >
                           <MdDelete size={20} />
                         </button>
@@ -245,25 +248,23 @@ export default function CustomersPage() {
         </div>
       </div>
 
-      {selectedCustomer && (
+      {editCustomer && (
         <EditCustomerModal
-          isOpen={!!selectedCustomer}
-          onClose={() => setSelectedCustomer(null)}
+          isOpen={!!editCustomer}
+          onClose={() => setEditCustomer(null)}
           onSuccess={() => {
             fetchCustomers(searchQuery);
-            setSelectedCustomer(null);
+            setEditCustomer(null);
           }}
-          customer={selectedCustomer}
+          customer={editCustomer}
         />
       )}
 
-      {deleteCustomer && (
-        <DeleteCustomerModal
-          isOpen={!!deleteCustomer}
-          onClose={() => setDeleteCustomer(null)}
-          onConfirm={handleDelete}
-          isDeleting={isDeleting === deleteCustomer._id}
-          customer={deleteCustomer}
+      {viewCustomer && (
+        <CustomerDetailsModal
+          isOpen={!!viewCustomer}
+          onClose={() => setViewCustomer(null)}
+          customer={viewCustomer}
         />
       )}
     </div>

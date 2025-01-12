@@ -3,6 +3,7 @@ import { IOrder, IOrderItem, IPayment } from '@/models/Order';
 
 interface OrderFilters {
   search?: string;
+  customerId?: string;
   status?: "Pending" | "Processing" | "Completed" | "Cancelled";
   customerType?: "B2B" | "B2C";
   paymentStatus?: "Unpaid" | "Partially Paid" | "Paid";
@@ -35,6 +36,8 @@ export const orderApi = {
     if (filters?.search) params.append("search", filters.search);
     if (filters?.status) params.append("status", filters.status);
     if (filters?.customerType) params.append("customerType", filters.customerType);
+    if (filters?.customerId) params.append("customerId", filters.customerId);
+    if (filters?.paymentStatus) params.append("paymentStatus", filters.paymentStatus);
     
     const response = await fetch(`/api/orders?${params.toString()}`);
     return handleResponse<IOrder[]>(response);
@@ -71,8 +74,8 @@ export const orderApi = {
   },
 
   // Add payment to order
-  addPayment: async (id: string, payment: IPayment) => {
-    const response = await fetch(`/api/orders?id=${id}`, {
+  addPayment: async (orderId: string, payment: Partial<IPayment>) => {
+    const response = await fetch(`/api/orders?id=${orderId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

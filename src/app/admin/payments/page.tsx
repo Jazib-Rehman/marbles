@@ -136,8 +136,8 @@ export default function PaymentsPage() {
                   </td>
                 </tr>
               ) : (
-                orders.map((order) => (
-                  <tr key={order._id} className="border-t border-gray-100">
+                orders.map((order,i) => (
+                  <tr key={i} className="border-t border-gray-100">
                     <td className="p-3">
                       <div className="font-medium">{order.orderNumber}</div>
                       <div className="text-sm text-gray-500">

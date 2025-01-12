@@ -168,6 +168,29 @@ orderSchema.pre('validate', async function(next) {
   next();
 });
 
+// Add this pre-save middleware to automatically calculate remaining amount
+orderSchema.pre('save', function(next) {
+  // Calculate total paid amount from all payments
+  const totalPaid = this.payments.reduce((sum, payment) => sum + payment.amount, 0);
+  
+  // Update paidAmount
+  this.paidAmount = totalPaid;
+  
+  // Update remainingAmount
+  this.remainingAmount = this.totalAmount - totalPaid;
+  
+  // Update payment status
+  if (this.remainingAmount <= 0) {
+    this.paymentStatus = 'Paid';
+  } else if (totalPaid > 0) {
+    this.paymentStatus = 'Partially Paid';
+  } else {
+    this.paymentStatus = 'Unpaid';
+  }
+  
+  next();
+});
+
 // TypeScript interfaces
 export interface IOrderItem {
   inventory: string;
