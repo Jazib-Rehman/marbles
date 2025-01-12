@@ -1,30 +1,19 @@
 import { handleResponse } from '@/utils/apiUtils';
-
-export interface InventoryItem {
-  _id?: string;
-  marbleType: string;
-  size: string;
-  quantity: number;
-  purchaseRate: number;
-  saleRate: number;
-  location?: string;
-  notes?: string;
-  status?: string;
-}
+import { IInventory } from '@/models/Inventory';
 
 export const inventoryApi = {
   getAll: async (search?: string) => {
     const queryString = search ? `?search=${encodeURIComponent(search)}` : '';
     const response = await fetch(`/api/inventory${queryString}`);
-    return handleResponse<InventoryItem[]>(response);
+    return handleResponse<IInventory[]>(response);
   },
 
   getById: async (id: string) => {
     const response = await fetch(`/api/inventory/${id}`);
-    return handleResponse<InventoryItem>(response);
+    return handleResponse<IInventory>(response);
   },
 
-  create: async (data: Omit<InventoryItem, '_id'>) => {
+  create: async (data: Omit<IInventory, '_id'>) => {
     const response = await fetch('/api/inventory', {
       method: 'POST',
       headers: {
@@ -32,10 +21,10 @@ export const inventoryApi = {
       },
       body: JSON.stringify(data),
     });
-    return handleResponse<InventoryItem>(response);
+    return handleResponse<IInventory>(response);
   },
 
-  update: async (id: string, data: Partial<InventoryItem>) => {
+  update: async (id: string, data: Partial<IInventory>) => {
     const response = await fetch(`/api/inventory/${id}`, {
       method: 'PUT',
       headers: {
@@ -43,7 +32,7 @@ export const inventoryApi = {
       },
       body: JSON.stringify(data),
     });
-    return handleResponse<InventoryItem>(response);
+    return handleResponse<IInventory>(response);
   },
 
   delete: async (id: string) => {
