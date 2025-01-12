@@ -42,7 +42,7 @@ export const orderApi = {
 
   // Get single order by ID
   getById: async (id: string) => {
-    const response = await fetch(`/api/orders/${id}`);
+    const response = await fetch(`/api/orders?id=${id}`);
     return handleResponse<IOrder>(response);
   },
 
@@ -60,7 +60,7 @@ export const orderApi = {
 
   // Update order
   update: async (id: string, data: UpdateOrderData) => {
-    const response = await fetch(`/api/orders/${id}`, {
+    const response = await fetch(`/api/orders?id=${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -72,7 +72,7 @@ export const orderApi = {
 
   // Add payment to order
   addPayment: async (id: string, payment: IPayment) => {
-    const response = await fetch(`/api/orders/${id}`, {
+    const response = await fetch(`/api/orders?id=${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -86,7 +86,7 @@ export const orderApi = {
 
   // Cancel order
   cancel: async (id: string, reason?: string) => {
-    const response = await fetch(`/api/orders/${id}`, {
+    const response = await fetch(`/api/orders?id=${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -101,7 +101,7 @@ export const orderApi = {
 
   // Delete order (only pending orders)
   delete: async (id: string) => {
-    const response = await fetch(`/api/orders/${id}`, {
+    const response = await fetch(`/api/orders?id=${id}`, {
       method: 'DELETE',
     });
     return handleResponse(response);

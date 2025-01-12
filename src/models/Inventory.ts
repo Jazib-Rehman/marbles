@@ -21,7 +21,7 @@ const inventorySchema = new mongoose.Schema({
   quantity: { type: Number, required: true, default: 0 },
   saleRate: { type: Number, required: true },
   purchaseRate: { type: Number, required: true },
-  supplier: { type: mongoose.Schema.Types.ObjectId, ref: 'Supplier', required: true },
+  supplier: { type: mongoose.Schema.Types.ObjectId, ref: 'Supplier', required: false },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 });

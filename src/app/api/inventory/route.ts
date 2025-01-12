@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
     await dbConnect();
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
-    
+
     if (id) {
       const item = await Inventory.findById(id);
       if (!item) {
@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
       }
       return NextResponse.json(item);
     }
-    
+
     // List inventory (existing code)
     const search = searchParams.get("search");
     let query = {};
@@ -99,13 +99,20 @@ export async function DELETE(request: NextRequest) {
 }
 
 // POST new inventory item
-export async function POST(req: Request) {
+export async function POST(request: NextRequest) {
   try {
     await dbConnect();
-    const body = await req.json();
+    const body = await request.json();
 
     // Validate required fields
-    const requiredFields = ["marbleType", "size", "quantity", "purchaseRate", "saleRate"];
+    const requiredFields = [
+      "marbleType",
+      "size",
+      "quantity",
+      "purchaseRate",
+      "saleRate"
+    ];
+
     for (const field of requiredFields) {
       if (!body[field]) {
         return NextResponse.json(
@@ -115,31 +122,16 @@ export async function POST(req: Request) {
       }
     }
 
-    // Validate rates
-    if (Number(body.purchaseRate) <= 0 || Number(body.saleRate) <= 0) {
-      return NextResponse.json(
-        { error: "Rates must be greater than 0" },
-        { status: 400 }
-      );
-    }
-
-    // Validate sale rate is not less than purchase rate
-    if (Number(body.saleRate) < Number(body.purchaseRate)) {
-      return NextResponse.json(
-        { error: "Sale rate cannot be less than purchase rate" },
-        { status: 400 }
-      );
-    }
-
     // Set status based on quantity
-    if (body.quantity <= 0) {
-      body.status = "Out of Stock";
-    } else if (body.quantity <= 100) { // You can adjust this threshold
-      body.status = "Low Stock";
-    }
+    const status = body.quantity <= 0 ? "Out of Stock"
+      : body.quantity <= 100 ? "Low Stock"
+        : "In Stock";
 
-    // Create new inventory item
-    const newItem = await Inventory.create(body);
+    const newItem = await Inventory.create({
+      ...body,
+      status
+    });
+
     return NextResponse.json(newItem, { status: 201 });
   } catch (error) {
     console.error("Error creating inventory item:", error);

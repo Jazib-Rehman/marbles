@@ -104,7 +104,7 @@ export async function POST(req: Request) {
   }
 }
 
-// Update PUT to use search params
+// Update PUT handler to include complete logic
 export async function PUT(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -119,13 +119,22 @@ export async function PUT(request: NextRequest) {
       { ...body },
       { new: true, runValidators: true }
     );
-    // ... rest of PUT logic
+
+    if (!updatedCustomer) {
+      return NextResponse.json(
+        { error: "Customer not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(updatedCustomer);
   } catch (error) {
+    console.error("Error updating customer:", error);
     return NextResponse.json({ error: "Error updating customer" }, { status: 500 });
   }
 }
 
-// Update DELETE to use search params
+// Complete DELETE handler
 export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -135,8 +144,16 @@ export async function DELETE(request: NextRequest) {
     }
     
     const deletedCustomer = await CustomerModel.findByIdAndDelete(id);
-    // ... rest of DELETE logic
+    if (!deletedCustomer) {
+      return NextResponse.json(
+        { error: "Customer not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({ message: "Customer deleted successfully" });
   } catch (error) {
+    console.error("Error deleting customer:", error);
     return NextResponse.json({ error: "Error deleting customer" }, { status: 500 });
   }
 } 

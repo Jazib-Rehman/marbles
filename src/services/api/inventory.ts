@@ -9,7 +9,7 @@ export const inventoryApi = {
   },
 
   getById: async (id: string) => {
-    const response = await fetch(`/api/inventory/${id}`);
+    const response = await fetch(`/api/inventory?id=${id}`);
     return handleResponse<IInventory>(response);
   },
 
@@ -25,7 +25,7 @@ export const inventoryApi = {
   },
 
   update: async (id: string, data: Partial<IInventory>) => {
-    const response = await fetch(`/api/inventory/${id}`, {
+    const response = await fetch(`/api/inventory?id=${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -36,7 +36,7 @@ export const inventoryApi = {
   },
 
   delete: async (id: string) => {
-    const response = await fetch(`/api/inventory/${id}`, {
+    const response = await fetch(`/api/inventory?id=${id}`, {
       method: 'DELETE',
     });
     return handleResponse(response);
