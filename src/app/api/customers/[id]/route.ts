@@ -2,15 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from "../../../../../lib/mongoose";
 import { CustomerModel } from "@/models/Customer";
 
-// Define the params type
-type Props = {
-  params: {
-    id: string;
-  };
-};
-
-// GET single customer
-export async function GET(request: NextRequest, { params }: Props) {
+// Change the type definition to match Next.js route handler pattern
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     await dbConnect();
     const customer = await CustomerModel.findById(params.id);
@@ -32,7 +28,10 @@ export async function GET(request: NextRequest, { params }: Props) {
 }
 
 // PUT update customer
-export async function PUT(request: NextRequest, { params }: Props) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     await dbConnect();
     const body = await request.json();
@@ -60,7 +59,10 @@ export async function PUT(request: NextRequest, { params }: Props) {
 }
 
 // DELETE customer
-export async function DELETE(request: NextRequest, { params }: Props) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     await dbConnect();
     const deletedCustomer = await CustomerModel.findByIdAndDelete(params.id);

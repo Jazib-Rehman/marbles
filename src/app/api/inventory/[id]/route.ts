@@ -2,14 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from "../../../../../lib/mongoose";
 import Inventory from "@/models/Inventory";
 
-type Props = {
-  params: {
-    id: string;
-  };
-};
-
-// GET single inventory item
-export async function GET(request: NextRequest, { params }: Props) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
     try {
         await dbConnect();
         const item = await Inventory.findById(params.id);
@@ -28,44 +24,13 @@ export async function GET(request: NextRequest, { params }: Props) {
     }
 }
 
-// PUT update inventory item
-export async function PUT(request: NextRequest, { params }: Props) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
     try {
         await dbConnect();
         const body = await request.json();
-
-        // Validate rates if they're being updated
-        if (body.purchaseRate && body.purchaseRate <= 0) {
-            return NextResponse.json(
-                { error: "Purchase rate must be greater than 0" },
-                { status: 400 }
-            );
-        }
-
-        if (body.saleRate && body.saleRate <= 0) {
-            return NextResponse.json(
-                { error: "Sale rate must be greater than 0" },
-                { status: 400 }
-            );
-        }
-
-        if (body.purchaseRate && body.saleRate && body.saleRate < body.purchaseRate) {
-            return NextResponse.json(
-                { error: "Sale rate cannot be less than purchase rate" },
-                { status: 400 }
-            );
-        }
-
-        // Update status based on quantity if it's being updated
-        if (body.quantity !== undefined) {
-            if (body.quantity <= 0) {
-                body.status = "Out of Stock";
-            } else if (body.quantity <= 100) {
-                body.status = "Low Stock";
-            } else {
-                body.status = "In Stock";
-            }
-        }
 
         const updatedItem = await Inventory.findByIdAndUpdate(
             params.id,
@@ -89,8 +54,10 @@ export async function PUT(request: NextRequest, { params }: Props) {
     }
 }
 
-// DELETE inventory item
-export async function DELETE(request: NextRequest, { params }: Props) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
     try {
         await dbConnect();
         const deletedItem = await Inventory.findByIdAndDelete(params.id);
