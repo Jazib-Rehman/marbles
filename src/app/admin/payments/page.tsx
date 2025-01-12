@@ -5,6 +5,7 @@ import { orderApi } from "@/services/api/order";
 import { IOrder } from "@/models/Order";
 import { getErrorMessage } from "@/utils/apiUtils";
 import AddPaymentModal from "./AddPaymentModal";
+import OrderDetailsModal from "./OrderDetailsModal";
 
 export default function PaymentsPage() {
   const [orders, setOrders] = useState<IOrder[]>([]);
@@ -17,6 +18,7 @@ export default function PaymentsPage() {
     to: "",
   });
   const [selectedOrder, setSelectedOrder] = useState<IOrder | null>(null);
+  const [viewOrder, setViewOrder] = useState<IOrder | null>(null);
 
   // Calculate payment summaries
   const summary = orders.reduce(
@@ -139,7 +141,12 @@ export default function PaymentsPage() {
                 orders.map((order,i) => (
                   <tr key={i} className="border-t border-gray-100">
                     <td className="p-3">
-                      <div className="font-medium">{order.orderNumber}</div>
+                      <div 
+                        className="font-medium cursor-pointer hover:text-[#FF914D]"
+                        onClick={() => setViewOrder(order)}
+                      >
+                        {order.orderNumber}
+                      </div>
                       <div className="text-sm text-gray-500">
                         {new Date(order.createdAt!).toLocaleDateString()}
                       </div>
@@ -209,6 +216,14 @@ export default function PaymentsPage() {
             setSelectedOrder(null);
           }}
           order={selectedOrder}
+        />
+      )}
+
+      {viewOrder && (
+        <OrderDetailsModal
+          isOpen={!!viewOrder}
+          onClose={() => setViewOrder(null)}
+          order={viewOrder}
         />
       )}
     </div>

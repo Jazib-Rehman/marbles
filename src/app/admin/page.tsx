@@ -37,24 +37,23 @@ export default function AdminDashboard() {
 
   // Configure revenue trend chart
   const revenueConfig = {
-    data: data?.revenueData || [],
+    data: revenueData,
     xField: 'month',
     yField: 'revenue',
     point: {
-      size: 5,
-      shape: 'diamond',
+      shapeField: 'square',
+      sizeField: 4,
     },
+    interaction: {
+      tooltip: {
+        marker: false,
+      },
+    },
+    style: {
+      lineWidth: 2,
+    },
+
     color: '#FF914D',
-    yAxis: {
-      label: {
-        formatter: (value: number) => `₨${(value / 1000).toFixed(0)}K`,
-      },
-    },
-    tooltip: {
-      formatter: (datum: any) => {
-        return { name: 'Revenue', value: `₨${datum.revenue.toLocaleString()}` };
-      },
-    },
   };
 
   // Configure order status distribution chart
@@ -62,27 +61,19 @@ export default function AdminDashboard() {
     data: data?.ordersByStatus || [],
     angleField: 'count',
     colorField: '_id',
-    radius: 0.8,
     label: {
-      type: 'spider',
-      content: '{name}\n{percentage}',
+      text: 'count',
       style: {
-        textAlign: 'center',
+        fontWeight: 'bold',
       },
     },
     legend: {
-      position: 'bottom',
-    },
-    color: ['#FF914D', '#36B37E', '#FFB020', '#FF5630'],
-    tooltip: {
-      formatter: (datum: any) => {
-        return { name: datum._id, value: datum.count };
+      color: {
+        title: false,
+        position: 'right',
+        rowPadding: 5,
       },
     },
-    interactions: [
-      { type: 'element-active' },
-      { type: 'legend-highlight' },
-    ],
   };
 
   return (

@@ -7,6 +7,7 @@ import { getErrorMessage } from "@/utils/apiUtils";
 import CreateOrderModal from "./CreateOrderModal";
 import EditOrderModal from "./EditOrderModal";
 import DeleteOrderModal from "./DeleteOrderModal";
+import OrderDetailsModal from "../payments/OrderDetailsModal";
 
 export default function OrdersPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -17,6 +18,7 @@ export default function OrdersPage() {
   const [statusFilter, setStatusFilter] = useState<IOrder['status'] | "">("");
   const [selectedOrder, setSelectedOrder] = useState<IOrder | null>(null);
   const [orderToDelete, setOrderToDelete] = useState<IOrder | null>(null);
+  const [viewOrder, setViewOrder] = useState<IOrder | null>(null);
 
   const fetchOrders = async (search?: string) => {
     try {
@@ -118,7 +120,12 @@ export default function OrdersPage() {
                     className="border-b border-gray-100 last:border-none hover:bg-gray-50"
                   >
                     <td className="p-3">
-                      <div className="font-medium">{order.orderNumber}</div>
+                      <div 
+                        className="font-medium cursor-pointer hover:text-[#FF914D]"
+                        onClick={() => setViewOrder(order)}
+                      >
+                        {order.orderNumber}
+                      </div>
                       <div className="text-sm text-gray-500">
                         {new Date(order.createdAt!).toLocaleDateString()}
                       </div>
@@ -214,6 +221,14 @@ export default function OrdersPage() {
             setOrderToDelete(null);
           }}
           order={orderToDelete}
+        />
+      )}
+
+      {viewOrder && (
+        <OrderDetailsModal
+          isOpen={!!viewOrder}
+          onClose={() => setViewOrder(null)}
+          order={viewOrder}
         />
       )}
     </div>
