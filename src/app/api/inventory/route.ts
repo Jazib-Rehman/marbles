@@ -1,14 +1,26 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "../../../../lib/mongoose";
 import Inventory from "@/models/Inventory";
 
-// GET all inventory items
-export async function GET(req: Request) {
+export async function GET(request: NextRequest) {
   try {
     await dbConnect();
-    const { searchParams } = new URL(req.url);
-    const search = searchParams.get("search");
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
     
+    if (id) {
+      const item = await Inventory.findById(id);
+      if (!item) {
+        return NextResponse.json(
+          { error: "Inventory item not found" },
+          { status: 404 }
+        );
+      }
+      return NextResponse.json(item);
+    }
+    
+    // List inventory (existing code)
+    const search = searchParams.get("search");
     let query = {};
     if (search) {
       query = {
@@ -23,9 +35,64 @@ export async function GET(req: Request) {
     const inventory = await Inventory.find(query).sort({ createdAt: -1 });
     return NextResponse.json(inventory);
   } catch (error) {
-    console.error("Error fetching inventory:", error);
     return NextResponse.json(
       { error: "Error fetching inventory" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+    if (!id) {
+      return NextResponse.json({ error: "ID is required" }, { status: 400 });
+    }
+
+    const body = await request.json();
+    const updatedItem = await Inventory.findByIdAndUpdate(
+      id,
+      { ...body },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedItem) {
+      return NextResponse.json(
+        { error: "Inventory item not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(updatedItem);
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Error updating inventory item" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+    if (!id) {
+      return NextResponse.json({ error: "ID is required" }, { status: 400 });
+    }
+
+    const deletedItem = await Inventory.findByIdAndDelete(id);
+    if (!deletedItem) {
+      return NextResponse.json(
+        { error: "Inventory item not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({ message: "Inventory item deleted successfully" });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Error deleting inventory item" },
       { status: 500 }
     );
   }

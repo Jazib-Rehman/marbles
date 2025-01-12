@@ -1,12 +1,24 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "../../../../lib/mongoose";
 import { CustomerModel, B2BCustomer, B2CCustomer } from "@/models/Customer";
 
 // GET all customers with optional search and filter by type
-export async function GET(req: Request) {
+export async function GET(request: NextRequest) {
   try {
     await dbConnect();
-    const { searchParams } = new URL(req.url);
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+    
+    if (id) {
+      // Single customer fetch
+      const customer = await CustomerModel.findById(id);
+      if (!customer) {
+        return NextResponse.json({ error: "Customer not found" }, { status: 404 });
+      }
+      return NextResponse.json(customer);
+    }
+    
+    // List customers (existing code)
     const search = searchParams.get("search");
     const type = searchParams.get("type") as "B2B" | "B2C" | null;
     
@@ -89,5 +101,42 @@ export async function POST(req: Request) {
       { error: "Error creating customer" },
       { status: 500 }
     );
+  }
+}
+
+// Update PUT to use search params
+export async function PUT(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+    if (!id) {
+      return NextResponse.json({ error: "ID is required" }, { status: 400 });
+    }
+    
+    const body = await request.json();
+    const updatedCustomer = await CustomerModel.findByIdAndUpdate(
+      id,
+      { ...body },
+      { new: true, runValidators: true }
+    );
+    // ... rest of PUT logic
+  } catch (error) {
+    return NextResponse.json({ error: "Error updating customer" }, { status: 500 });
+  }
+}
+
+// Update DELETE to use search params
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+    if (!id) {
+      return NextResponse.json({ error: "ID is required" }, { status: 400 });
+    }
+    
+    const deletedCustomer = await CustomerModel.findByIdAndDelete(id);
+    // ... rest of DELETE logic
+  } catch (error) {
+    return NextResponse.json({ error: "Error deleting customer" }, { status: 500 });
   }
 } 

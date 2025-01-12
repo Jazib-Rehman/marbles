@@ -14,7 +14,7 @@ export const customerApi = {
   },
 
   getById: async (id: string) => {
-    const response = await fetch(`/api/customers/${id}`);
+    const response = await fetch(`/api/customers?id=${id}`);
     return handleResponse<Customer>(response);
   },
 
@@ -30,18 +30,16 @@ export const customerApi = {
   },
 
   update: async (id: string, data: Partial<Customer>) => {
-    const response = await fetch(`/api/customers/${id}`, {
+    const response = await fetch(`/api/customers?id=${id}`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     });
     return handleResponse<Customer>(response);
   },
 
   delete: async (id: string) => {
-    const response = await fetch(`/api/customers/${id}`, {
+    const response = await fetch(`/api/customers?id=${id}`, {
       method: 'DELETE',
     });
     return handleResponse(response);
