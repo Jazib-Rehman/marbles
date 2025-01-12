@@ -16,7 +16,8 @@ export async function GET(request: NextRequest) {
     if (id) {
       const order = await Order.findById(id)
         .populate('customer', 'businessName firstName lastName phone email address')
-        .populate('items.inventory', 'marbleType size quantity');
+        .populate('items.inventory', 'marbleType size quantity')
+        .populate('payments');
 
       if (!order) {
         return NextResponse.json({ error: "Order not found" }, { status: 404 });
@@ -26,11 +27,11 @@ export async function GET(request: NextRequest) {
 
     // List orders with filters
     let query: any = {};
-    
+
     if (customerId) {
       query.customer = customerId;
     }
-    
+
     if (searchParams.get("status")) {
       query.status = searchParams.get("status");
     }
@@ -45,7 +46,9 @@ export async function GET(request: NextRequest) {
     const orders = await Order.find(query)
       .sort({ createdAt: -1 })
       .populate('customer', 'businessName firstName lastName')
-      .populate('items.inventory', 'marbleType size');
+      .populate('items.inventory', 'marbleType size')
+      .populate('payments');
+
 
     return NextResponse.json(orders);
   } catch (error) {
@@ -74,10 +77,10 @@ export async function PUT(request: NextRequest) {
     if (body.payments) {
       // Add new payments to the existing payments array
       existingOrder.payments.push(...body.payments);
-      
+
       // Save to trigger the pre-save middleware
       await existingOrder.save();
-      
+
       // Remove payments from body to prevent duplicate updates
       delete body.payments;
     }
