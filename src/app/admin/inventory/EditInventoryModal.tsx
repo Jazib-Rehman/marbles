@@ -1,14 +1,15 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { MdClose } from "react-icons/md";
-import { inventoryApi, InventoryItem } from "@/services/api/inventory";
+import { inventoryApi } from "@/services/api/inventory";
 import { getErrorMessage } from "@/utils/apiUtils";
+import { IInventory } from "@/models/Inventory";
 
 interface EditInventoryModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
-  item: InventoryItem;
+  item: IInventory;
 }
 
 const marbleTypes = [
@@ -212,7 +213,10 @@ export default function EditInventoryModal({ isOpen, onClose, onSuccess, item }:
               <select 
                 className="w-full px-3 py-2 border rounded-lg"
                 value={formData.status}
-                onChange={(e) => setFormData({...formData, status: e.target.value})}
+                onChange={(e) => setFormData({
+                  ...formData, 
+                  status: e.target.value as "In Stock" | "Low Stock" | "Out of Stock"
+                })}
                 required
               >
                 <option value="In Stock">In Stock</option>

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { MdClose } from "react-icons/md";
-import { inventoryApi, InventoryItem } from "@/services/api/inventory";
+import { inventoryApi } from "@/services/api/inventory";
 import { getErrorMessage } from "@/utils/apiUtils";
 
 interface AddInventoryModalProps {
@@ -53,6 +53,8 @@ export default function AddInventoryModal({ isOpen, onClose, onSuccess }: AddInv
         quantity: Number(formData.quantity),
         purchaseRate: Number(formData.purchaseRate),
         saleRate: Number(formData.saleRate),
+        status: Number(formData.quantity) <= 0 ? "Out of Stock" : 
+               Number(formData.quantity) <= 100 ? "Low Stock" : "In Stock"
       });
       
       setFormData({

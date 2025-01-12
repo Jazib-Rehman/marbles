@@ -10,6 +10,7 @@ export interface IInventory {
   supplier?: string;
   status: "In Stock" | "Low Stock" | "Out of Stock";
   location?: string;
+  notes?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

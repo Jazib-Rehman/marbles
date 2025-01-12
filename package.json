@@ -11,6 +11,8 @@
   "dependencies": {
     "@ant-design/charts": "^2.2.6",
     "@ant-design/plots": "^2.3.3",
+    "@aws-sdk/client-s3": "^3.726.1",
+    "@aws-sdk/s3-request-presigner": "^3.726.1",
     "@types/formidable": "^3.4.5",
     "@types/mongoose": "^5.11.97",
     "aws-sdk": "^2.1691.0",
