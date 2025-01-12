@@ -26,10 +26,7 @@ export default function ReportsPage() {
   const fetchReports = async () => {
     try {
       setLoading(true);
-      const response = await reportsApi.getReports({
-        startDate: dateRange.startDate,
-        endDate: dateRange.endDate,
-      });
+      const response = await reportsApi.getReports();
       setData(response);
     } catch (err) {
       setError('Error fetching report data');

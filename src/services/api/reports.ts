@@ -37,13 +37,8 @@ export interface ReportData {
 }
 
 export const reportsApi = {
-  getReports: async (filters?: ReportFilters) => {
-    const params = new URLSearchParams();
-    if (filters?.period) params.append('period', filters.period);
-    if (filters?.startDate) params.append('startDate', filters.startDate);
-    if (filters?.endDate) params.append('endDate', filters.endDate);
-
-    const response = await fetch(`/api/reports?${params.toString()}`);
+  getReports: async () => {
+    const response = await fetch('/api/reports');
     return handleResponse<ReportData>(response);
   },
 }; 
