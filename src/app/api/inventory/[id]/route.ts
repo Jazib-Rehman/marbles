@@ -1,12 +1,15 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from "../../../../../lib/mongoose";
 import Inventory from "@/models/Inventory";
 
+type Props = {
+  params: {
+    id: string;
+  };
+};
+
 // GET single inventory item
-export async function GET(
-    req: Request,
-    { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest, { params }: Props) {
     try {
         await dbConnect();
         const item = await Inventory.findById(params.id);
@@ -26,13 +29,10 @@ export async function GET(
 }
 
 // PUT update inventory item
-export async function PUT(
-    req: Request,
-    { params }: { params: { id: string } }
-) {
+export async function PUT(request: NextRequest, { params }: Props) {
     try {
         await dbConnect();
-        const body = await req.json();
+        const body = await request.json();
 
         // Validate rates if they're being updated
         if (body.purchaseRate && body.purchaseRate <= 0) {
@@ -90,10 +90,7 @@ export async function PUT(
 }
 
 // DELETE inventory item
-export async function DELETE(
-    req: Request,
-    { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest, { params }: Props) {
     try {
         await dbConnect();
         const deletedItem = await Inventory.findByIdAndDelete(params.id);

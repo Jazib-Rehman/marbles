@@ -1,17 +1,20 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from "../../../../../lib/mongoose";
 import Order from "@/models/Order";
 import { CustomerModel } from "@/models/Customer";
 import Inventory from "@/models/Inventory";
 
+type Props = {
+  params: {
+    id: string;
+  };
+};
+
 // GET single order
-export async function GET(
-  req: Request,
-  context: { params: { id: string } }
-) {
+export async function GET(request: NextRequest, { params }: Props) {
   try {
     await dbConnect();
-    const order = await Order.findById(context.params.id)
+    const order = await Order.findById(params.id)
       .populate('customer', 'businessName firstName lastName phone email address')
       .populate('items.inventory', 'marbleType size quantity');
 
@@ -32,16 +35,13 @@ export async function GET(
 }
 
 // PUT update order
-export async function PUT(
-  req: Request,
-  context: { params: { id: string } }
-) {
+export async function PUT(request: NextRequest, { params }: Props) {
   try {
     await dbConnect();
-    const body = await req.json();
+    const body = await request.json();
 
     // Find existing order
-    const existingOrder = await Order.findById(context.params.id);
+    const existingOrder = await Order.findById(params.id);
     if (!existingOrder) {
       return NextResponse.json(
         { error: "Order not found" },
@@ -65,7 +65,7 @@ export async function PUT(
     }
 
     const updatedOrder = await Order.findByIdAndUpdate(
-      context.params.id,
+      params.id,
       { ...body },
       { new: true, runValidators: true }
     );
@@ -80,13 +80,10 @@ export async function PUT(
 }
 
 // DELETE order (soft delete or with restrictions)
-export async function DELETE(
-  req: Request,
-  context: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest, { params }: Props) {
   try {
     await dbConnect();
-    const order = await Order.findById(context.params.id);
+    const order = await Order.findById(params.id);
 
     if (!order) {
       return NextResponse.json(
@@ -118,7 +115,7 @@ export async function DELETE(
       }
     });
 
-    await Order.findByIdAndDelete(context.params.id);
+    await Order.findByIdAndDelete(params.id);
 
     return NextResponse.json({ message: "Order deleted successfully" });
   } catch (error) {

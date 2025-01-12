@@ -1,15 +1,19 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from "../../../../../lib/mongoose";
 import { CustomerModel } from "@/models/Customer";
 
+// Define the params type
+type Props = {
+  params: {
+    id: string;
+  };
+};
+
 // GET single customer
-export async function GET(
-  req: Request,
-  context: { params: { id: string } }
-) {
+export async function GET(request: NextRequest, { params }: Props) {
   try {
     await dbConnect();
-    const customer = await CustomerModel.findById(context.params.id);
+    const customer = await CustomerModel.findById(params.id);
     
     if (!customer) {
       return NextResponse.json(
@@ -28,16 +32,13 @@ export async function GET(
 }
 
 // PUT update customer
-export async function PUT(
-  req: Request,
-  context: { params: { id: string } }
-) {
+export async function PUT(request: NextRequest, { params }: Props) {
   try {
     await dbConnect();
-    const body = await req.json();
+    const body = await request.json();
 
     const updatedCustomer = await CustomerModel.findByIdAndUpdate(
-      context.params.id,
+      params.id,
       { ...body },
       { new: true, runValidators: true }
     );
@@ -59,13 +60,10 @@ export async function PUT(
 }
 
 // DELETE customer
-export async function DELETE(
-  req: Request,
-  context: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest, { params }: Props) {
   try {
     await dbConnect();
-    const deletedCustomer = await CustomerModel.findByIdAndDelete(context.params.id);
+    const deletedCustomer = await CustomerModel.findByIdAndDelete(params.id);
 
     if (!deletedCustomer) {
       return NextResponse.json(
