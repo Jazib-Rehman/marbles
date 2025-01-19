@@ -74,7 +74,7 @@ export default function AddPaymentModal({
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm mb-1">Amount (Remaining: ₨{order.remainingAmount.toLocaleString()})</label>
+            <label className="block text-sm mb-1">Amount (Remaining: ₨ {order.remainingAmount.toLocaleString()})</label>
             <input
               type="number"
               className="w-full px-3 py-2 border rounded-lg"

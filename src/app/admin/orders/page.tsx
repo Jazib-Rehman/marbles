@@ -143,7 +143,7 @@ export default function OrdersPage() {
                         ))}
                       </div>
                     </td>
-                    <td className="p-3">₨{order.totalAmount.toLocaleString()}</td>
+                    <td className="p-3">₨ {order.totalAmount.toLocaleString()}</td>
                     <td className="p-3">
                       <span
                         className={`px-2 py-1 rounded-full text-sm ${

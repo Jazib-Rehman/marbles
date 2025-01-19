@@ -169,8 +169,8 @@ export default function InventoryPage() {
                                             </td>
                                             <td className="p-3 hidden sm:table-cell">{item.size}</td>
                                             <td className="p-3 text-right">{item.quantity}</td>
-                                            <td className="p-3 text-right hidden sm:table-cell">₨{item.purchaseRate.toLocaleString()}</td>
-                                            <td className="p-3 text-right hidden sm:table-cell">₨{item.saleRate.toLocaleString()}</td>
+                                            <td className="p-3 text-right hidden sm:table-cell">₨ {item.purchaseRate.toLocaleString()}</td>
+                                            <td className="p-3 text-right hidden sm:table-cell">₨ {item.saleRate.toLocaleString()}</td>
                                             <td className="p-3 hidden sm:table-cell">
                                                 <div className="flex justify-center">
                                                     <span

@@ -96,13 +96,13 @@ export default function AdminDashboard() {
         />
         <StatCard
           title="Total Revenue"
-          value={`₨${stats.totalRevenue.toLocaleString()}`}
+          value={`₨ ${stats.totalRevenue.toLocaleString()}`}
           icon={<FaMoneyBillWave size={24} />}
           color="yellow"
         />
         <StatCard
           title="Unpaid Amount"
-          value={`₨${stats.unpaidAmount.toLocaleString()}`}
+          value={`₨ ${stats.unpaidAmount.toLocaleString()}`}
           icon={<FaMoneyBillWave size={24} />}
           color="red"
         />
@@ -161,7 +161,7 @@ export default function AdminDashboard() {
                   <div className="text-sm text-gray-500">{order.customerName}</div>
                 </div>
                 <div className="text-right">
-                  <div className="font-medium">₨{order.totalAmount.toLocaleString()}</div>
+                  <div className="font-medium">₨ {order.totalAmount.toLocaleString()}</div>
                   <div className={`text-sm ${
                     order.status === "Completed" ? "text-green-500" :
                     order.status === "Pending" ? "text-yellow-500" :
@@ -184,7 +184,7 @@ export default function AdminDashboard() {
                   <div className="text-sm text-gray-500">{customer.orderCount} orders</div>
                 </div>
                 <div className="text-right">
-                  <div className="font-medium">₨{customer.totalSpent.toLocaleString()}</div>
+                  <div className="font-medium">₨ {customer.totalSpent.toLocaleString()}</div>
                 </div>
               </div>
             ))}

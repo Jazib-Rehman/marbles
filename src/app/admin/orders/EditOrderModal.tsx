@@ -193,8 +193,7 @@ export default function EditOrderModal({
                   className="bg-gray-50 p-3 rounded-lg text-sm grid grid-cols-2 gap-2"
                 >
                   <div>
-                    <span className="font-medium">Amount:</span> ₨
-                    {p.amount.toLocaleString()}
+                    <span className="font-medium">Amount:</span> ₨ {p.amount.toLocaleString()}
                   </div>
                   <div>
                     <span className="font-medium">Method:</span> {p.paymentMethod}

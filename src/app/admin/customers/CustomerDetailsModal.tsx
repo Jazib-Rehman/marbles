@@ -95,7 +95,7 @@ export default function CustomerDetailsModal({
             </div>
             <div>
               <div className="text-sm text-gray-500">Total Spent</div>
-              <div>₨{customer.totalSpent.toLocaleString()}</div>
+              <div>₨ {customer.totalSpent.toLocaleString()}</div>
             </div>
             <div>
               <div className="text-sm text-gray-500">Status</div>
@@ -142,13 +142,13 @@ export default function CustomerDetailsModal({
                         {order.items.map(item => `${item.marbleType} (${item.quantity})`).join(", ")}
                       </td>
                       <td className="p-3 text-right">
-                        ₨{order.totalAmount.toLocaleString()}
+                        ₨ {order.totalAmount.toLocaleString()}
                       </td>
                       <td className="p-3 text-right text-green-600">
-                        ₨{order.paidAmount.toLocaleString()}
+                        ₨ {order.paidAmount.toLocaleString()}
                       </td>
                       <td className="p-3 text-right text-red-600">
-                        ₨{order.remainingAmount.toLocaleString()}
+                        ₨ {order.remainingAmount.toLocaleString()}
                       </td>
                       <td className="p-3">
                         <div className="flex justify-center">

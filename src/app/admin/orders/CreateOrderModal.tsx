@@ -281,7 +281,7 @@ export default function CreateOrderModal({
                 </div>
                 <div className="col-span-3">
                   <div className="text-sm text-gray-500">
-                    Total: ₨{(item.quantity * item.ratePerFoot).toLocaleString()}
+                    Total: ₨ {(item.quantity * item.ratePerFoot).toLocaleString()}
                   </div>
                 </div>
                 <div className="col-span-1">

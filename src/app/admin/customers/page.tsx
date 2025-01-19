@@ -210,7 +210,7 @@ export default function CustomersPage() {
                       )}
                     </td>
                     <td className="p-3 hidden md:table-cell">{customer.totalOrders}</td>
-                    <td className="p-3 hidden md:table-cell">₨{customer.totalSpent.toLocaleString()}</td>
+                    <td className="p-3 hidden md:table-cell">₨ {customer.totalSpent.toLocaleString()}</td>
                     <td className="p-3 hidden md:table-cell">
                       <span
                         className={`px-2 py-1 rounded-full text-sm ${
