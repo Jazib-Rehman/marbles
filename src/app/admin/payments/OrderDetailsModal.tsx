@@ -90,13 +90,13 @@ export default function OrderDetailsModal({
                     {item.marbleType} - {item.size}
                   </td>
                   <td className="p-3 text-right">{item.quantity}</td>
-                  <td className="p-3 text-right">₨{item.ratePerFoot.toLocaleString()}</td>
-                  <td className="p-3 text-right">₨{item.totalAmount.toLocaleString()}</td>
+                  <td className="p-3 text-right">₨ {item.ratePerFoot.toLocaleString()}</td>
+                  <td className="p-3 text-right">₨ {item.totalAmount.toLocaleString()}</td>
                 </tr>
               ))}
               <tr className="border-t border-gray-200 font-medium">
                 <td colSpan={3} className="p-3 text-right">Total Amount:</td>
-                <td className="p-3 text-right">₨{order.totalAmount.toLocaleString()}</td>
+                <td className="p-3 text-right">₨ {order.totalAmount.toLocaleString()}</td>
               </tr>
             </tbody>
           </table>
@@ -113,7 +113,7 @@ export default function OrderDetailsModal({
               >
                 <div>
                   <div className="text-sm text-gray-500">Amount</div>
-                  <div className="font-medium">₨{payment.amount.toLocaleString()}</div>
+                  <div className="font-medium">₨ {payment.amount.toLocaleString()}</div>
                 </div>
                 <div>
                   <div className="text-sm text-gray-500">Method</div>

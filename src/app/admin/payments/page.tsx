@@ -58,15 +58,15 @@ export default function PaymentsPage() {
         <div className="grid grid-cols-3 gap-6">
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
             <div className="text-sm text-gray-500 mb-2">Total Amount</div>
-            <div className="text-2xl font-bold">₨{summary.totalAmount.toLocaleString()}</div>
+            <div className="text-2xl font-bold">₨ {summary.totalAmount.toLocaleString()}</div>
           </div>
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
             <div className="text-sm text-gray-500 mb-2">Received Amount</div>
-            <div className="text-2xl font-bold text-green-600">₨{summary.paidAmount.toLocaleString()}</div>
+            <div className="text-2xl font-bold text-green-600">₨ {summary.paidAmount.toLocaleString()}</div>
           </div>
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
             <div className="text-sm text-gray-500 mb-2">Pending Amount</div>
-            <div className="text-2xl font-bold text-red-600">₨{summary.remainingAmount.toLocaleString()}</div>
+            <div className="text-2xl font-bold text-red-600">₨ {summary.remainingAmount.toLocaleString()}</div>
           </div>
         </div>
       </div>
@@ -155,12 +155,12 @@ export default function PaymentsPage() {
                       <div className="font-medium">{order.customerName}</div>
                       <div className="text-sm text-gray-500">{order.customerContact}</div>
                     </td>
-                    <td className="p-3 text-right">₨{order.totalAmount.toLocaleString()}</td>
+                    <td className="p-3 text-right">₨ {order.totalAmount.toLocaleString()}</td>
                     <td className="p-3 text-right text-green-600">
-                      ₨{order.paidAmount.toLocaleString()}
+                      ₨ {order.paidAmount.toLocaleString()}
                     </td>
                     <td className="p-3 text-right text-red-600">
-                      ₨{order.remainingAmount.toLocaleString()}
+                      ₨ {order.remainingAmount.toLocaleString()}
                     </td>
                     <td className="p-3">
                       <span
@@ -187,7 +187,7 @@ export default function PaymentsPage() {
                       {order.payments.length > 0 ? (
                         <div>
                           <div className="font-medium">
-                            ₨{order.payments[order.payments.length - 1].amount.toLocaleString()}
+                            ₨ {order.payments[order.payments.length - 1].amount.toLocaleString()}
                           </div>
                           <div className="text-sm text-gray-500">
                             {new Date(

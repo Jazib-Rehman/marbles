@@ -69,22 +69,22 @@ export default function ReportsPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <StatCard
           title="Total Sales"
-          value={`₨${data.salesOverview.totalSales.toLocaleString()}`}
+          value={`₨ ${data.salesOverview.totalSales.toLocaleString()}`}
           subtitle={`${data.salesOverview.totalOrders} orders`}
         />
         <StatCard
           title="Paid Amount"
-          value={`₨${data.salesOverview.paidAmount.toLocaleString()}`}
+          value={`₨ ${data.salesOverview.paidAmount.toLocaleString()}`}
           subtitle="Total paid"
         />
         <StatCard
           title="Remaining Amount"
-          value={`₨${data.salesOverview.remainingAmount.toLocaleString()}`}
+          value={`₨ ${data.salesOverview.remainingAmount.toLocaleString()}`}
           subtitle="Total unpaid"
         />
         <StatCard
           title="Average Order Value"
-          value={`₨${Math.round(data.salesOverview.averageOrderValue).toLocaleString()}`}
+          value={`₨ ${Math.round(data.salesOverview.averageOrderValue).toLocaleString()}`}
           subtitle="Per order"
         />
       </div>
@@ -150,7 +150,7 @@ export default function ReportsPage() {
                 <tr key={index} className="border-t border-gray-100">
                   <td className="p-3">{product._id}</td>
                   <td className="p-3 text-right">{product.totalQuantity}</td>
-                  <td className="p-3 text-right">₨{product.totalRevenue.toLocaleString()}</td>
+                  <td className="p-3 text-right">₨ {product.totalRevenue.toLocaleString()}</td>
                 </tr>
               ))}
             </tbody>

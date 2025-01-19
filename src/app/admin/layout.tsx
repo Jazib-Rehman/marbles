@@ -76,6 +76,11 @@ export default function AdminLayout({
       href: "/admin/settings", 
       label: "Settings", 
       icon: <MdSettings size={20} /> 
+    },
+    {
+      href: '/admin/supplier-dashboard',
+      icon: <MdLocalShipping size={20} />,
+      label: 'Supplier Dashboard'
     }
   ];
 
